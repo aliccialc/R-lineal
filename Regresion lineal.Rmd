@@ -15,6 +15,51 @@ library('lmtest')
 library('faraway')
 library('GGally')
 ```
+# Introducción
+
+Los datos de este estudio se pueden incorporar a R desde el data.frame bodyfat del paquete TH.data.
+
+Las variables del estudio son:
+
+· age es la edad en años.
+
+· DEXfat es la grasa corporal medida con DXA, variable respuesta.
+
+· waistcirc es la circunferencia de la cintura.
+
+· hipcirc es el perímetro de la cadera.
+
+· elbowbreadth es la anchura del codo.
+
+· kneebreadth es la anchura de la rodilla.
+
+· anthro3a es la suma del logaritmo de tres medidas antropométricas.
+
+· anthro3b es la suma del logaritmo de tres medidas antropométricas.
+
+· anthro3c es la suma del logaritmo de tres medidas antropométricas.
+
+· anthro4 es la suma del logaritmo de tres medidas antropométricas.
+
+# Exploración de los datos
+
+Primera observación de las variables, vemos que todas son numéricas.
+```{r variables}
+data("bodyfat")
+str(bodyfat)
+```
+A continuación vemos un resumen de los resultados, para confirmar que no vemos raro en los datos.
+```{r summary}
+summary(bodyfat)
+```
+
+## Gráficas y calculo de la matriz de correlaciones entre variables 2 a 2
+
+En la figura 1 podemos ver la correlación entre las variantes. La correlación mide la relación lineal entre dos variables. Si nos dirigimos a la segunda fila, vemos la relación de DEXfat con el resto de variables, observamos una correlación positiva. Las variables con menor correlación son age con un 0,271 y elbowbreadth con un 0,354. 
+
+```{r grafica1, fig.cap= "Gráfico de dispersión, densidad y correlación. *** significa estadísticamente significativa}
+ggpairs(bodyfat)
+```
 
 
 
