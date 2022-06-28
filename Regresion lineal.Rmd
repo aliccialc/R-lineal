@@ -61,5 +61,20 @@ En la figura 1 podemos ver la correlación entre las variantes. La correlación 
 ggpairs(bodyfat)
 ```
 
+## Estudio de VIF
 
+Es muy frecuente que varias variables explicativas estén correlacionadas. Para confirmar que hay multicolinealidad, esta relación debe ser fuerte (>0.8) pero no perfecta (1). Esto lo hemos podido comprobar en la gráfica anterior.
+
+Hay varias formas de detectar la multicolinealidad. Una de ellas es viendo si R2 es alta, pero los coeficientes t´s no son significativos. Para ello podemos ver el resumen de la regresión lineal. En este caso podemos sospechar porque nos encontramos con un R2 de 0.9117 y con solo 3 de las 9 variables con resultado significativo.
+```{r}
+lmod <- lm(DEXfat ~., bodyfat)
+summary(lmod)
+```
+
+Otra forma es mediante el Factor de Influencia de la Varianza (VIF). Es una medida del grado en que la varianza del estimador de mínimos cuadrados se incrementa por esta colinealidad.
+Podemos situar la correlación mayor a 0.8 a partir de 5vif y 0.9 con 10vif. Por lo tanto todos mayores, podemos empezar a pensar que existe multicolinealidad. Por lo tanto, podríamos decir que son las cuatro últimas variables las que presentan multicolinealidad.
+
+```{r}
+vif(lmod)
+```
 
