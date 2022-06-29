@@ -72,7 +72,7 @@ summary(lmod)
 ```
 
 Otra forma es mediante el Factor de Influencia de la Varianza (VIF). Es una medida del grado en que la varianza del estimador de mínimos cuadrados se incrementa por esta colinealidad.
-Podemos situar la correlación mayor a 0.8 a partir de 5vif y 0.9 con 10vif. Por lo tanto todos mayores, podemos empezar a pensar que existe multicolinealidad. Por lo tanto, podríamos decir que son las cuatro últimas variables las que presentan multicolinealidad.
+Podemos situar la correlación mayor a 0.8 a partir de 5vif y 0.9 con 10vif. Por lo tanto todos mayores, podemos empezar a pensar que existe multicolinealidad. Por lo tanto, podríamos decir que son anthro3a, anthro3b, anthro3b las que presentan multicolinealidad.
 
 ```{r}
 vif(lmod)
