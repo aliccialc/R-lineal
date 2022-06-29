@@ -78,3 +78,23 @@ Podemos situar la correlación mayor a 0.8 a partir de 5vif y 0.9 con 10vif. Por
 vif(lmod)
 ```
 
+## Contraste Test F
+
+Sabemos que muchas veces debemos confirmar si muchos de los predictores que utilizamos son necesarios. Por motivos de simplicidad, siempre se elige el modelo más pequeño, eso si, si la diferencia entre modelos no es muy grande.
+
+Para comprobar si eliminando las dos variables el modelo sigue funcionando. Es decir, si H0: anthro3b = anthro4 = 0. 
+
+```{r test F }
+# model without anthro3b and anthro4
+lmod2 <- lm(DEXfat ~ age + waistcirc +
+hipcirc + elbowbreadth + kneebreadth + anthro3a + anthro3c, bodyfat)
+
+anova(lmod2, lmod)
+```
+
+El valor p de 0.199 indica que la hipótesis nula no puede rechazarse aquí. Por lo tanto podemos trabajar con el modelo simple.
+
+```{r summary lmod}
+summary(lmod)
+```
+
