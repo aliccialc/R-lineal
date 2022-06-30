@@ -94,7 +94,7 @@ anova(lmod2, lmod)
 
 El valor p de 0.199 indica que la hipótesis nula no puede rechazarse aquí. Por lo tanto podemos trabajar con el modelo simple.
 
-```{r summary lmod}
-summary(lmod)
-```
+## Mejoras del modelo transformando la variable respuesta
+
+Las transformaciones en la respuesta y/o predictores pueden hacer ajuster y mejoras en los modelos. En este caso veremos la transformación en la respuesta mediante Box-Cox. Vamos a incluir un nuevo parámetro llamado Lambda.
 
