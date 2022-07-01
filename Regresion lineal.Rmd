@@ -94,7 +94,88 @@ anova(lmod2, lmod)
 
 El valor p de 0.199 indica que la hipótesis nula no puede rechazarse aquí. Por lo tanto podemos trabajar con el modelo simple.
 
-## Mejoras del modelo transformando la variable respuesta
+## Propuesta de mejora para el modelo
 
-Las transformaciones en la respuesta y/o predictores pueden hacer ajuster y mejoras en los modelos. En este caso veremos la transformación en la respuesta mediante Box-Cox. Vamos a incluir un nuevo parámetro llamado Lambda.
+Las transformaciones en la respuesta y/o predictores pueden hacer ajuster y mejoras en los modelos. En este caso veremos la transformación en la respuesta mediante Box-Cox. Este método selecciona la transformación a utilizar sobre la variable para resolver la supuesta no normalizadad. 
+
+Para trabajar necesitamos extraer el parámetro lambda. A continuación observamos que el valor se encuentra en 0.2626263. Si nos vamos a la tabla de transformaciones de lambda, podríamos proponer que se haga una raiz cuadrada. 
+
+```{r lambda}
+b <- boxcox(lmod2)
+b$x[which.max(b$y)]
+```
+Nuevo modelo:
+```{r new model, echo=TRUE}
+nuevo_modelo <- lm(sqrt(DEXfat) ~ age + waistcirc +
+hipcirc + elbowbreadth + kneebreadth + anthro3a + anthro3c, bodyfat)
+```
+
+## Análisis de residuos modelo lmod2
+
+Vamos a estudiar si hay homocedasticidad y una distribución normal. Podemos observar en la primera gráfica, que la línea roja, presenta una caida, y que la dispersión de los datos no es la misma a ambos lados de la linea central. Por otro lado, en la segunda gráfica (Q-Q) obsersevamos que no todos los datos caen más o menos sobre la linea.
+
+```{r residuos}
+par(mfrow=c(2,2))
+plot(lmod2)
+```
+
+Para confirmar se realizan dos test.
+La prueba Breusch-Pagan.
+hipótesis nula: Homocedaticidad
+hipótesis alternativa: Heterocedaticidad
+
+```{r heteroscedasticity}
+bptest(lmod2)
+```
+Podemos observar que el valor de p es 0.01649, menor que 0.05, por lo tanto se rechaza la hipótesis nula y confirmamos que existe heterocedasticidad.
+
+Prueba Shapiro-Wilk:
+Hipótesis nula: Normalidad
+Hipótesis alternativa: No normalidad
+
+```{r normality}
+shapiro.test(residuals(lmod2))
+```
+Podemos observar que el valor de p es 0.003922, menor que 0.05, por lo tanto se rechaza la hipótesis nula y confirmamos que no hay normalidad.
+
+## Análisis de valores atípicos
+
+En este punto vamos a comprobar si alguna observación alta de **leverage**. Esto se realiza para saber si hay algún valor atípico que pueda influir en las variables.
+
+```{r leverage}
+p <- length(coefficients(lmod2))
+n <- length(fitted(lmod2))
+ratio <-p/n
+plot(row.names(bodyfat),hatvalues(lmod2), type = 'h')
+abline(h=c(2,3)*ratio, col='red', lty=2)
+```
+
+```{r}
+head(sort(hatvalues(lmod2), decreasing=T))
+```
+Tenemos dos puntos con alto leverage, el 81 y el 113.
+
+· Outliers:
+
+```{r Outliers}
+outlierTest(lmod2)
+```
+Tenemos un punto que es un outlier, el 87.
+
+· Puntos influentes
+```{r}
+cook <- cooks.distance(lmod2)
+head(sort(cook,decreasing=T))
+
+plot(row.names(bodyfat),cook, type='h')
+cutoff<-4/(length(cook)-length(lmod2$coefficients)-2)
+abline(h=cutoff, col='red')
+```
+
+```{r}
+head(sort(cook[cook>cutoff], decreasing=T))
+```
+Tenemos 5 puntos influyentes: 87, 94, 91, 71, 92.
+
+
 
