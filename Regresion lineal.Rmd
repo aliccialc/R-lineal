@@ -177,5 +177,30 @@ head(sort(cook[cook>cutoff], decreasing=T))
 ```
 Tenemos 5 puntos influyentes: 87, 94, 91, 71, 92.
 
+## Predicción en forma de intervalos de confianza al 90%
+
+Tenemos una serie de valores observados:
+age = 62, waistcirc = 100, hipcirc = 105, elbowbreadth = 6.8, kneebreadth = 9.5, anthro3a = 4.2, anthro3c = 4.3
+
+Para estos valores queremos hacer una predicción de DEXfat, parcando un intervalo de predicción del 90%. 
+
+```{r new values}
+newdata = data.frame(age = 62, waistcirc = 100, hipcirc = 105, elbowbreadth = 6.8, kneebreadth = 9.5, anthro3a = 4.2, anthro3c = 4.3)
+```
+
+```{r predict}
+predict(lmod2, newdata, interval='prediction', level=0.9)
+```
+Concluimos que el 90% de las personas con los anteriores parámetros tienen una grasa corporal entre el 30.36 y 41.81 DEXfat.
+
+Ahora vamos a comprobar si los valores observados no suponen una extrapolación. La extrapolación ocurre cuando tratamos de predecir la respuesta para valores del predictor que se encuentran fuera del rango de los datos originales. Vemos a continuación que los valores se encuentran dentro del elipsoide y que la predicción no constituye una extrapolación.
+
+```{r, echo=TRUE}
+h <- max(hatvalues(lmod2))
+x <- c(1,62,100,105,6.8,9.5,4.2,4.3)
+XtXinv <- summary(lmod2)$cov.unscaled
+t(x)%*%XtXinv%*%x < h
+```
+
 
 
