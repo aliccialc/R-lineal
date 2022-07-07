@@ -1,13 +1,20 @@
 ---
 title: "Regresion lineal"
-output: html_document
+output:
+  pdf_document:
+    toc: yes
+    toc_depth: 2
+  html_document:
+    toc: yes
+    toc_depth: 2
+    toc_float: yes
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, eval = TRUE, fig.height = 4, fig.width = 4, fig.align = 'center', message = TRUE, cache = TRUE)
+knitr::opts_chunk$set(echo = FALSE, eval = TRUE, fig.align = 'center', message = TRUE, cache = TRUE)
 ```
 
-```{r library, eval=FALSE}
+```{r library}
 library('TH.data')
 library('car')
 library('MASS')
@@ -48,16 +55,16 @@ Primera observación de las variables, vemos que todas son numéricas.
 data("bodyfat")
 str(bodyfat)
 ```
-A continuación vemos un resumen de los resultados, para confirmar que no vemos raro en los datos.
+A continuación vemos un resumen de los resultados, para confirmar que no vemos nada raro en los datos.
 ```{r summary}
 summary(bodyfat)
 ```
 
 ## Gráficas y calculo de la matriz de correlaciones entre variables 2 a 2
 
-En la figura 1 podemos ver la correlación entre las variantes. La correlación mide la relación lineal entre dos variables. Si nos dirigimos a la segunda fila, vemos la relación de DEXfat con el resto de variables, observamos una correlación positiva. Las variables con menor correlación son age con un 0,271 y elbowbreadth con un 0,354. 
+En la figura 1 podemos ver la correlación entre las varianbles. La correlación mide la relación lineal entre dos variables. Si nos dirigimos a la segunda fila, vemos la relación de DEXfat con el resto de variables, observamos una correlación positiva. Las variables con menor correlación son age con un 0,271 y elbowbreadth con un 0,354. 
 
-```{r grafica1, fig.cap= "Gráfico de dispersión, densidad y correlación. *** significa estadísticamente significativa}
+```{r grafica1, fig.cap= "Gráfico de dispersión, densidad y correlación. *** significa estadísticamente significativa"}
 ggpairs(bodyfat)
 ```
 
@@ -65,14 +72,14 @@ ggpairs(bodyfat)
 
 Es muy frecuente que varias variables explicativas estén correlacionadas. Para confirmar que hay multicolinealidad, esta relación debe ser fuerte (>0.8) pero no perfecta (1). Esto lo hemos podido comprobar en la gráfica anterior.
 
-Hay varias formas de detectar la multicolinealidad. Una de ellas es viendo si R2 es alta, pero los coeficientes t´s no son significativos. Para ello podemos ver el resumen de la regresión lineal. En este caso podemos sospechar porque nos encontramos con un R2 de 0.9117 y con solo 3 de las 9 variables con resultado significativo.
+Hay varias formas de detectar la multicolinealidad. Una de ellas es viendo si R2 es alta, pero los coeficientes t´s no son significativos. Para ello podemos ver el resumen de la regresión lineal. En este caso podemos sospechar, porque nos encontramos con un R2 de 0.9117 y con solo 3 de las 9 variables con resultado significativo.
 ```{r}
 lmod <- lm(DEXfat ~., bodyfat)
 summary(lmod)
 ```
 
 Otra forma es mediante el Factor de Influencia de la Varianza (VIF). Es una medida del grado en que la varianza del estimador de mínimos cuadrados se incrementa por esta colinealidad.
-Podemos situar la correlación mayor a 0.8 a partir de 5vif y 0.9 con 10vif. Por lo tanto todos mayores, podemos empezar a pensar que existe multicolinealidad. Por lo tanto, podríamos decir que son anthro3a, anthro3b, anthro3b las que presentan multicolinealidad.
+Podemos situar la correlación mayor a 0.8 a partir de 5vif y 0.9 con 10vif. Por lo tanto, todos lo que sean mayor presentan multicolinealidad. En este caso podemos decir que son anthro3a, anthro3b, anthro3b las variables que presentan multicolinealidad.
 
 ```{r}
 vif(lmod)
@@ -80,9 +87,9 @@ vif(lmod)
 
 ## Contraste Test F
 
-Sabemos que muchas veces debemos confirmar si muchos de los predictores que utilizamos son necesarios. Por motivos de simplicidad, siempre se elige el modelo más pequeño, eso si, si la diferencia entre modelos no es muy grande.
+Sabemos que muchas veces debemos confirmar si muchos de los predictores que utilizamos son necesarios. Por motivos de simplicidad, siempre se elige el modelo más pequeño, si la diferencia entre modelos no es muy grande.
 
-Para comprobar si eliminando las dos variables el modelo sigue funcionando. Es decir, si H0: anthro3b = anthro4 = 0. 
+Vamos a eliminar dos variables para confirmar si el modelo sigue funcionando. Es decir, si H0: anthro3b = anthro4 = 0. 
 
 ```{r test F }
 # model without anthro3b and anthro4
@@ -96,11 +103,11 @@ El valor p de 0.199 indica que la hipótesis nula no puede rechazarse aquí. Por
 
 ## Propuesta de mejora para el modelo
 
-Las transformaciones en la respuesta y/o predictores pueden hacer ajuster y mejoras en los modelos. En este caso veremos la transformación en la respuesta mediante Box-Cox. Este método selecciona la transformación a utilizar sobre la variable para resolver la supuesta no normalizadad. 
+Las transformaciones en la respuesta y/o predictores pueden hacer ajustes y mejoras en los modelos. En este caso veremos la transformación en la respuesta mediante Box-Cox. Este método selecciona la transformación a utilizar sobre la variable para resolver la supuesta no normalizadad. 
 
 Para trabajar necesitamos extraer el parámetro lambda. A continuación observamos que el valor se encuentra en 0.2626263. Si nos vamos a la tabla de transformaciones de lambda, podríamos proponer que se haga una raiz cuadrada. 
 
-```{r lambda}
+```{r lambda, fig.cap= "Gráfico de lambda"}
 b <- boxcox(lmod2)
 b$x[which.max(b$y)]
 ```
@@ -112,14 +119,14 @@ hipcirc + elbowbreadth + kneebreadth + anthro3a + anthro3c, bodyfat)
 
 ## Análisis de residuos modelo lmod2
 
-Vamos a estudiar si hay homocedasticidad y una distribución normal. Podemos observar en la primera gráfica, que la línea roja, presenta una caida, y que la dispersión de los datos no es la misma a ambos lados de la linea central. Por otro lado, en la segunda gráfica (Q-Q) obsersevamos que no todos los datos caen más o menos sobre la linea.
+Vamos a estudiar si hay homocedasticidad y una distribución normal. Podemos observar en la primera gráfica (Residuos vs ajustados) que la línea roja hace referencia a la relación no lineal entre las variables predictivas y la variable respuesta. La segunda gráfica (Q-Q) obsersevamos  que los residuos no siguen una distribución normal en alguno de los puntos. La tercera muestra que los residuos no se distribuyen por igual a lo largo de los rangos de los predictores. La cuarta muesta los valores atípicos.
 
-```{r residuos}
+```{r residuos, fig.cap= "Residuos vs Ajustados, Normal Q-Q, Escala vs Ubicacion y Residuos vs Leverage"}
 par(mfrow=c(2,2))
 plot(lmod2)
 ```
 
-Para confirmar se realizan dos test.
+Para confirmar se realizan dos test:
 La prueba Breusch-Pagan.
 hipótesis nula: Homocedaticidad
 hipótesis alternativa: Heterocedaticidad
@@ -182,7 +189,7 @@ Tenemos 5 puntos influyentes: 87, 94, 91, 71, 92.
 Tenemos una serie de valores observados:
 age = 62, waistcirc = 100, hipcirc = 105, elbowbreadth = 6.8, kneebreadth = 9.5, anthro3a = 4.2, anthro3c = 4.3
 
-Para estos valores queremos hacer una predicción de DEXfat, parcando un intervalo de predicción del 90%. 
+Para estos valores queremos hacer una predicción de DEXfat, marcando un intervalo de predicción del 90%. 
 
 ```{r new values}
 newdata = data.frame(age = 62, waistcirc = 100, hipcirc = 105, elbowbreadth = 6.8, kneebreadth = 9.5, anthro3a = 4.2, anthro3c = 4.3)
