@@ -64,7 +64,8 @@ abline(lm3)
 
 El modelo ANCOVA o análisis de la covarianza es una fusión entre el modelo ANOVA y de la regresión lineal múltiple. 
 
-Vemos en la gráfica del apartado anterior, que ambas rectas estan casi paralelas la una de la otra. Vamos a contrastar si hay diferencias significativa entre ellas. Es decir que si en el grupo de males 3 hay más huevos independientemente del peso. Para ellos vamos a creas un modelo en el que haya interacción entre las variables weight y males, y estudiamos el contraste.
+Vemos en la gráfica del apartado anterior, que ambas rectas estan casi paralelas la una de la otra. Vamos a contrastar si hay diferencias significativa entre ellas. Es decir que si en el grupo de males 3 hay más huevos, independientemente del peso. Para ellos vamos a creas un modelo en el que haya interacción entre las variables weight y males. 
+Estudiamos el contraste.
 
 ```{r}
 lmod <- lm(eggs ~ weight*males, data=photinus)
@@ -74,12 +75,7 @@ anova(lmod)
 En primer lugar observamos que podemos prescindir de la interacción ya que no es significativa. Así pues,
 las rectas de regresión son paralelas.
 
-
-
-
-El valor p es igual a 0.001131 lo que indica que las varianzas entre los grupos no son iguales. Podemos intentar transformarlo, pero no es muy preocupante por el momento.
-
-Vamos a estudiar le modelo en su conjunto. Podemos observar que todos los valores p son significativos, lo que nos indica que hay diferencias entre los grupos male1 y males3 (0.00548). 
+Vamos a estudiar eL modelo en su conjunto. Podemos observar que todos los valores p son significativos, lo que nos indica que hay diferencias entre los grupos maleS1 y males3 (0.00548). 
 
 ```{r}
 lm <- lm(eggs ~ weight + males, data=photinus)
