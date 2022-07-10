@@ -44,7 +44,7 @@ A continuación podemos ver un valor de p del 0.00014. Lo que nos da a entender 
 lm1 <- lm(eggs ~ weight, data=photinus, subset=males==1)
 summary(lm1)
 ```
-A continuación haremos la regresión para el segundo grupo males 3. En este caso sucede lo mismo el p valor es inferior a 0.05 (0.00324).
+A continuación haremos la regresión para el segundo grupo males 3. En este caso sucede lo mismo, el p valor es inferior a 0.05 (0.00324).
 
 ```{r regression male3}
 lm3 <- lm(eggs ~ weight, data=photinus, subset=males==3)
